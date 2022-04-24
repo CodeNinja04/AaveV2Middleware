@@ -72,14 +72,6 @@ contract AaveV2 {
     wethGateway.withdrawETH(PoolAddress, amount, msg.sender);
   }
 
-//  function borrowEth(uint256 amount) external payable {
-//     Iweth weth = Iweth(wethAddress);
-//     ILendingPool LendingPool = ILendingPool(PoolAddress);
-//     LendingPool.borrow(wethAddress, amount, 1, 0, address(this));
-
-//     weth.transfer(msg.sender,amount);
-
-// }
 
  
 

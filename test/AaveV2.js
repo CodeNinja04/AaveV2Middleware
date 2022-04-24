@@ -163,29 +163,6 @@ describe("AaveV2", function () {
 
     });
 
-    // it("Borrow ETH", async function () {
-
-    //     console.log("eth:", await signer.getBalance());
-    //     var bali = await AwethContract.balanceOf(deployedContractAddress);
-    //     console.log("inital : ", bali);
-
-
-    //     var dep = await AaveContract.connect(signer).borrowEth(
-    //         ethers.utils.parseEther("1")
-    //     );
-
-    //     console.log("eth Balance", await signer.getBalance());
-    //     balf = await AwethContract.balanceOf(deployedContractAddress);
-    //     console.log("final", balf);
-
-
-    // });
-
-
-
-
-
-    
-
+  
 
 })
