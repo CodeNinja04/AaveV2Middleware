@@ -10,7 +10,6 @@ describe("AaveV2", function () {
     const ausdc = "0xBcca60bB61934080951369a648Fb03DF4F96263C"
     var UsdcContract;
     var AwethContract;
-    var AusdcContract;
     var signer;
     var Aave;
 
@@ -30,7 +29,7 @@ describe("AaveV2", function () {
         //console.log(signer);
         UsdcContract = new ethers.Contract(Usdc, abi, signer);
         AwethContract = new ethers.Contract(aweth, abi, signer);
-        AusdcContract = new ethers.Contract(ausdc, abi, signer);
+
         console.log("its working")
     });
 
@@ -164,7 +163,7 @@ describe("AaveV2", function () {
     });
 
 
-    it("borrow eth", async function() {
+    it("borrow eth", async function () {
 
         console.log("eth:", await signer.getBalance());
         var bali = await AwethContract.balanceOf(deployedContractAddress);
@@ -182,6 +181,6 @@ describe("AaveV2", function () {
 
     })
 
-  
+
 
 })
