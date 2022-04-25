@@ -71,15 +71,31 @@ contract AaveV2 {
         wethGateway.withdrawETH(PoolAddress, amount, msg.sender);
     }
 
-    function borrowEth(uint256 amount) external payable {
+    function borrowEth(uint256 amount)  external payable {
         // IStableDebtToken stabledebt = IStableDebtToken(wethstabledebt);
-        // stabledebt.approveDelegation(wethGatewayAddress,amount+1);
+        // stabledebt.approveDelegation(wethGatewayAddress,amount);
 
         IVariableDebtToken variabledebt = IVariableDebtToken(wethvariabledebt);
         variabledebt.approveDelegation(wethGatewayAddress, amount);
 
         IWETHGateway wethGateway = IWETHGateway(wethGatewayAddress);
         wethGateway.borrowETH(PoolAddress, amount, 2, 0);
-        payable(msg.sender).transfer(amount);
+        payable(msg.sender).transfer(address(this).balance);
     }
+
+        function repayEth() external payable {
+        IWETHGateway wethGateway = IWETHGateway(wethGatewayAddress);
+        wethGateway.repayETH{value: msg.value}(PoolAddress,msg.value,2,address(this));
+    }
+
+     receive() external payable {
+        
+    }
+
+    fallback() external payable {
+
+    }
+
+   
+
 }

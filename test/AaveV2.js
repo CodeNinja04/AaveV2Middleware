@@ -5,7 +5,7 @@ const { network } = require("hardhat");
 describe("AaveV2", function () {
 
     const Usdc = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // usdc contract address
-    const acc = ethers.utils.getAddress("0xe63fEd8d441Ee8128eAA583549dcB60DF4F4F109")
+    const acc = ethers.utils.getAddress("0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B")//"0xe63fEd8d441Ee8128eAA583549dcB60DF4F4F109")
     const aweth = "0x030bA81f1c18d280636F32af80b9AAd02Cf0854e"
     const ausdc = "0xBcca60bB61934080951369a648Fb03DF4F96263C"
     var UsdcContract;
@@ -54,12 +54,12 @@ describe("AaveV2", function () {
         console.log("initial : ", bali)
         let approval = await UsdcContract.connect(signer).approve(
             deployedContractAddress,
-            100
+            6000
         );
 
         var dep = await AaveContract
             .connect(signer)
-            .deposit(100, Usdc);
+            .deposit(6000, Usdc);
 
         //console.log(dep)
 
@@ -84,7 +84,7 @@ describe("AaveV2", function () {
         console.log("final:", balf)
     });
 
-    xit("borrow USDC", async function () {
+    it("borrow USDC", async function () {
 
 
         var bali = await UsdcContract.balanceOf(acc);
@@ -171,8 +171,27 @@ describe("AaveV2", function () {
 
 
         var dep = await AaveContract.connect(signer).borrowEth(
-            ethers.utils.parseEther("1")
+             ethers.utils.parseEther("1")
         );
+
+        console.log("eth Balance", await signer.getBalance());
+        balf = await AwethContract.balanceOf(deployedContractAddress);
+        console.log("final", balf);
+
+
+    })
+
+
+    it("repay eth", async function () {
+
+        console.log("eth:", await signer.getBalance());
+        var bali = await AwethContract.balanceOf(deployedContractAddress);
+        console.log("inital : ", bali);
+
+
+        var dep = await AaveContract.connect(signer).repayEth({
+            value: ethers.utils.parseEther("1")
+        });
 
         console.log("eth Balance", await signer.getBalance());
         balf = await AwethContract.balanceOf(deployedContractAddress);
