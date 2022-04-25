@@ -16,8 +16,9 @@ contract AaveV2 {
     address public  PoolAddress= ILendingPoolAddressesProvider(LendingPoolAddressProvider).getLendingPool();
     address wethGatewayAddress =address(0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04); 
     address wethAddress = IWETHGateway(wethGatewayAddress).getWETHAddress();                  
-    address aWethAddress = 0x030bA81f1c18d280636F32af80b9AAd02Cf0854e; 
-
+    address aWethAddress = address(0x030bA81f1c18d280636F32af80b9AAd02Cf0854e);
+    address wethstabledebt =address(0x4e977830ba4bd783C0BB7F15d3e243f73FF57121); 
+    address wethvariabledebt =address(0xF63B34710400CAd3e044cFfDcAb00a0f32E33eCf);
    function deposit(uint256 amount, address tokenAddr) external {
     IERC20 token = IERC20(tokenAddr);
     
@@ -73,7 +74,19 @@ contract AaveV2 {
   }
 
 
- 
+ function borrowEth(uint256 amount) external payable{
+
+    // IStableDebtToken stabledebt = IStableDebtToken(wethstabledebt);
+    // stabledebt.approveDelegation(wethGatewayAddress,amount+1);
+
+    IVariableDebtToken variabledebt = IVariableDebtToken(wethvariabledebt);
+    variabledebt.approveDelegation(wethGatewayAddress,amount);
+
+    IWETHGateway wethGateway = IWETHGateway(wethGatewayAddress);
+    wethGateway.borrowETH(PoolAddress, amount, 2,0); 
+    payable(msg.sender).transfer(amount);
+
+ }
 
 
 }

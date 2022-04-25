@@ -48,7 +48,7 @@ describe("AaveV2", function () {
         );
     });
 
-    xit("Deposit USDC", async function () {
+    it("Deposit USDC", async function () {
 
 
         var bali = await UsdcContract.balanceOf(acc);
@@ -134,7 +134,7 @@ describe("AaveV2", function () {
 
 
         var dep = await AaveContract.connect(signer).depositEth({
-            value: ethers.utils.parseEther("5"),
+            value: ethers.utils.parseEther("10"),
         });
 
         console.log("eth Balance", await signer.getBalance());
@@ -162,6 +162,25 @@ describe("AaveV2", function () {
 
 
     });
+
+
+    it("borrow eth", async function() {
+
+        console.log("eth:", await signer.getBalance());
+        var bali = await AwethContract.balanceOf(deployedContractAddress);
+        console.log("inital : ", bali);
+
+
+        var dep = await AaveContract.connect(signer).borrowEth(
+            ethers.utils.parseEther("1")
+        );
+
+        console.log("eth Balance", await signer.getBalance());
+        balf = await AwethContract.balanceOf(deployedContractAddress);
+        console.log("final", balf);
+
+
+    })
 
   
 
