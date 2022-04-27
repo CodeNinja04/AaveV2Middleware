@@ -101,7 +101,7 @@ describe("AaveV2", function () {
         console.log(balf)
     });
 
-    xit("repay USDC", async function () {
+    it("repay USDC", async function () {
 
 
         var bali = await UsdcContract.balanceOf(acc);

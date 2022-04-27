@@ -3,8 +3,6 @@ pragma solidity ^0.8.1;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-//import {ILendingPool} from "./ILendingPool.sol";
-//import {ILendingPoolAddressesProvider} from "./ILendingPoolAddressesProvider.sol";
 
 import "./interfaces.sol";
 
@@ -19,11 +17,11 @@ contract AaveV2 {
     address wethGatewayAddress =
         address(0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04);
     address wethAddress = IWETHGateway(wethGatewayAddress).getWETHAddress();
-    address aWethAddress = address(0x030bA81f1c18d280636F32af80b9AAd02Cf0854e);
     address wethstabledebt =
-        address(0x4e977830ba4bd783C0BB7F15d3e243f73FF57121);
+        0x4e977830ba4bd783C0BB7F15d3e243f73FF57121;
     address wethvariabledebt =
-        address(0xF63B34710400CAd3e044cFfDcAb00a0f32E33eCf);
+        0xF63B34710400CAd3e044cFfDcAb00a0f32E33eCf;
+    address aWethAddress = 0x030bA81f1c18d280636F32af80b9AAd02Cf0854e;
 
     function deposit(uint256 amount, address tokenAddr) external {
         IERC20 token = IERC20(tokenAddr);
@@ -32,7 +30,7 @@ contract AaveV2 {
 
         token.safeTransferFrom(msg.sender, address(this), amount);
 
-        token.safeApprove(PoolAddress, amount);
+        token.safeApprove(address(LendingPool), amount);
         LendingPool.deposit(tokenAddr, amount, address(this), 0);
     }
 
@@ -71,31 +69,24 @@ contract AaveV2 {
         wethGateway.withdrawETH(PoolAddress, amount, msg.sender);
     }
 
-    function borrowEth(uint256 amount)  external payable {
-        // IStableDebtToken stabledebt = IStableDebtToken(wethstabledebt);
-        // stabledebt.approveDelegation(wethGatewayAddress,amount);
-
+    function borrowEth(uint256 amount) external payable {
         IVariableDebtToken variabledebt = IVariableDebtToken(wethvariabledebt);
         variabledebt.approveDelegation(wethGatewayAddress, amount);
 
         IWETHGateway wethGateway = IWETHGateway(wethGatewayAddress);
         wethGateway.borrowETH(PoolAddress, amount, 2, 0);
-        payable(msg.sender).transfer(address(this).balance);
+       (bool sent,)= payable(msg.sender).call{value:address(this).balance}("");
     }
 
-        function repayEth() external payable {
+    function repayEth() external payable {
         IWETHGateway wethGateway = IWETHGateway(wethGatewayAddress);
-        wethGateway.repayETH{value: msg.value}(PoolAddress,msg.value,2,address(this));
+        wethGateway.repayETH{value: msg.value}(
+            PoolAddress,
+            msg.value,
+            2,
+            address(this)
+        );
     }
 
-     receive() external payable {
-        
-    }
-
-    fallback() external payable {
-
-    }
-
-   
-
+    receive() external payable {}
 }
